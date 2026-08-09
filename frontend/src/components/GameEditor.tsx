@@ -50,7 +50,7 @@ function ThrowSelect({
     >
       {options.map((option) => (
         <option key={option || "empty"} value={option}>
-          {option === "" ? "ÔÇö" : option}
+          {option === "" ? "—" : option}
         </option>
       ))}
     </select>
@@ -122,7 +122,7 @@ export function GameEditor({
               Partie
             </h2>
             <p className="text-xs text-muted">
-              Bonus = m├¬mes r├¿gles que les frames (reframe si plus de quilles)
+              Bonus = mêmes règles que les frames (reframe si plus de quilles)
             </p>
           </div>
           {total != null ? (
@@ -139,7 +139,7 @@ export function GameEditor({
             disabled={pending}
             className="rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-700 disabled:opacity-40"
           >
-            Al├®atoire
+            Aléatoire
           </button>
           <button
             type="button"
@@ -147,7 +147,7 @@ export function GameEditor({
             disabled={pending}
             className="rounded-md border border-line bg-white px-3 py-1.5 text-xs font-medium hover:bg-zinc-50 disabled:opacity-40"
           >
-            10 al├®atoires
+            10 aléatoires
           </button>
           <button
             type="button"
@@ -162,7 +162,7 @@ export function GameEditor({
             disabled={pending}
             className="rounded-md bg-sky-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-sky-500 disabled:opacity-40"
           >
-            {pending ? "EnvoiÔÇª" : "Scorer"}
+            {pending ? "Envoi…" : "Scorer"}
           </button>
         </div>
 
@@ -235,7 +235,7 @@ export function GameEditor({
 
         {needed > 0 ? (
           <p className="mt-2 text-[11px] text-amber-800/80">
-            M├¬mes r├¿gles que F1ÔÇôF5 : apr├¿s spare/strike on reframe (ex. 6/ puis X).
+            Mêmes règles que F1–F5 : après spare/strike on reframe (ex. 6/ puis X).
             Pas de 6 X X. Objectif : {needed} throw{needed > 1 ? "s" : ""} bonus.
           </p>
         ) : null}
@@ -254,7 +254,7 @@ export function GameEditor({
           </h3>
           {loading || pending ? (
             <span className="text-xs text-muted">
-              {loading ? "ChargementÔÇª" : "Calcul des scoresÔÇª"}
+              {loading ? "Chargement…" : "Calcul des scores…"}
             </span>
           ) : null}
         </div>

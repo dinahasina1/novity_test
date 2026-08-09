@@ -20,9 +20,9 @@ export function runningPins(tokens: string[]): number {
 
 /**
  * Frame / bonus-group complete?
- * - X ÔåÆ 1 throw
- * - spare (/) ÔåÆ 2+ throws ending with /
- * - two throws totaling 15 ÔåÆ complete
+ * - X → 1 throw
+ * - spare (/) → 2+ throws ending with /
+ * - two throws totaling 15 → complete
  * - otherwise need 3 throws if first two did not clear 15
  */
 export function isThrowGroupComplete(tokens: string[]): boolean {
@@ -49,9 +49,9 @@ export function optionsForSlot(tokens: string[], slotIndex: number): string[] {
     const prev = tokens.slice(0, slotIndex).filter(Boolean);
     if (prev[0] === "X") return [""];
     if (prev.includes("/")) return [""];
-    // Two throws already cleared 15 ÔåÆ no third throw
+    // Two throws already cleared 15 → no third throw
     if (prev.length >= 2 && runningPins(prev) >= 15) return [""];
-    // One or two throws under 15 ÔåÆ keep going (third throw if needed)
+    // One or two throws under 15 → keep going (third throw if needed)
   }
 
   if (slotIndex === 0) {
@@ -95,7 +95,7 @@ export function padFrameSlots(frame: string[]): string[] {
 
 /**
  * Current bonus throw-group (frame) containing flat `index`.
- * After strike/spare/clear ÔåÆ reframe (new group, full pins).
+ * After strike/spare/clear → reframe (new group, full pins).
  */
 export function currentBonusGroup(
   extensions: string[],
@@ -117,7 +117,7 @@ export function currentBonusGroup(
   return { tokens: [], slotIndex: 0 };
 }
 
-/** Same options as a normal frame slot ÔÇö never allow 6 then X in the same group. */
+/** Same options as a normal frame slot — never allow 6 then X in the same group. */
 export function optionsForExtensionSlot(
   extensions: string[],
   index: number,
@@ -169,7 +169,7 @@ export function bonusThrowSlots(
 }
 export function formatThrows(throws: string[]): string {
   const filled = throws.filter(Boolean);
-  if (filled.length === 0) return "ÔÇö";
+  if (filled.length === 0) return "—";
   return filled.join(" ");
 }
 

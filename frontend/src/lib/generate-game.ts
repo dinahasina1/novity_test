@@ -77,8 +77,8 @@ export function missingBonusThrows(frames: string[][]): number {
 }
 
 /**
- * Fill bonus throws with the same frame rules as F1ÔÇôF5:
- * e.g. 6/ then X ÔÇö never 6 X X in one group.
+ * Fill bonus throws with the same frame rules as F1–F5:
+ * e.g. 6/ then X — never 6 X X in one group.
  */
 export function fillExtensions(
   needed: number,

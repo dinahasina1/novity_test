@@ -32,7 +32,7 @@ export function GamesTable({
   if (loading && rows.length === 0) {
     return (
       <p className="rounded-lg border border-dashed border-line px-3 py-6 text-center text-sm text-muted">
-        Chargement des gamesÔÇª
+        Chargement des games…
       </p>
     );
   }
@@ -91,7 +91,7 @@ export function GamesTable({
                         {formatThrows(padFrameSlots(row.frames[fi] ?? []))}
                       </td>
                       <td className="w-12 min-w-12 border-l border-sky-100 bg-sky-50 px-2 py-2 text-right font-mono font-semibold tabular-nums text-sky-950">
-                        {row.frameScores[fi] ?? "ÔÇö"}
+                        {row.frameScores[fi] ?? "—"}
                       </td>
                     </Fragment>
                   ))}
@@ -100,11 +100,11 @@ export function GamesTable({
                       key={`b-${bi}`}
                       className="border-l border-line px-2 py-2 font-mono text-amber-800"
                     >
-                      {row.extensions[bi] ?? "ÔÇö"}
+                      {row.extensions[bi] ?? "—"}
                     </td>
                   ))}
                   <td className="border-l border-line px-2 py-2 text-right font-mono text-sm font-semibold tabular-nums">
-                    {row.total ?? "ÔÇö"}
+                    {row.total ?? "—"}
                   </td>
                 </tr>
               );
@@ -115,7 +115,7 @@ export function GamesTable({
 
       <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
         <span>
-          {rows.length} jeu{rows.length > 1 ? "x" : ""} ┬À plus r├®cent en premier ┬À
+          {rows.length} jeu{rows.length > 1 ? "x" : ""} · plus récent en premier ·
           page {safePage + 1}/{pageCount}
         </span>
         <div className="flex gap-2">
@@ -125,7 +125,7 @@ export function GamesTable({
             onClick={() => setPage((p) => Math.max(0, p - 1))}
             className="rounded border border-line px-2 py-1 hover:bg-zinc-50 disabled:opacity-40"
           >
-            Pr├®c├®dent
+            Précédent
           </button>
           <button
             type="button"
