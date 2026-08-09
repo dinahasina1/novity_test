@@ -10,6 +10,6 @@ venv/
 tests/
 *.md
 .dockerignore
-Dockerfile
-Dockerfile.build
+Dockerfile*
 docker-compose*.yml
+requirements-dev.txt

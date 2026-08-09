@@ -3,7 +3,7 @@ services:
     image: ghcr.io/dinahasina1/novity_test/graphql-backend:latest
     container_name: bowling-graphql
     ports:
-      - "8003:8000"
+      - "8003:8003"
     environment:
       DATABASE_URL: sqlite:////data/bowling.db
       CORS_ORIGINS: ${CORS_ORIGINS:-http://novity-test.dinagency.tech,https://novity-test.dinagency.tech,http://925e6dd72a57d9ce.vercel-dns-017.com,https://925e6dd72a57d9ce.vercel-dns-017.com}
