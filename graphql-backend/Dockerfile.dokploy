@@ -1,2 +1,0 @@
-# Dokploy : pull l'image déjà buildée sur GHCR (pas de build local)
-FROM ghcr.io/dinahasina1/novity_test/graphql-backend:latest

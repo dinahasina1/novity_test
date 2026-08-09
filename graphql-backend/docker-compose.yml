@@ -1,6 +1,8 @@
 services:
   graphql-api:
-    image: ghcr.io/dinahasina1/novity_test/graphql-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: bowling-graphql
     ports:
       - "8003:8003"
