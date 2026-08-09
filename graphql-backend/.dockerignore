@@ -11,4 +11,5 @@ tests/
 *.md
 .dockerignore
 Dockerfile
+Dockerfile.build
 docker-compose*.yml
