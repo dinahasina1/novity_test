@@ -1,4 +1,4 @@
-import pytest
+﻿import pytest
 from pydantic import ValidationError
 
 from app.scoring.calculator import calculate
@@ -56,3 +56,32 @@ def test_mixed_game_scores():
     result = calculate(game)
     assert [frame.score for frame in result.frames] == [27, 13, 29, 14, 30]
     assert result.total == 113
+
+
+def test_bonus_follows_frame_rules_reject_6xx():
+    with pytest.raises(ValidationError):
+        Game.from_tokens(
+            frames=[["X"], ["X"], ["X"], ["X"], ["X"]],
+            extensions=["6", "X", "X"],
+        )
+
+
+def test_bonus_spare_then_strike_frame():
+    game = Game.from_tokens(
+        frames=[["X"], ["X"], ["X"], ["X"], ["X"]],
+        extensions=["6", "/", "X"],
+    )
+    result = calculate(game)
+    assert [frame.score for frame in result.frames] == [60, 60, 51, 45, 45]
+    assert result.total == 261
+
+
+def test_bonus_open_three_throws():
+    game = Game.from_tokens(
+        frames=[["X"], ["X"], ["X"], ["X"], ["X"]],
+        extensions=["-", "-", "/"],
+    )
+    result = calculate(game)
+    assert [frame.score for frame in result.frames] == [60, 60, 45, 30, 30]
+    assert result.total == 225
+

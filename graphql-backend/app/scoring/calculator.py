@@ -1,9 +1,9 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from pydantic import BaseModel
 
+from app.scoring.extensions import extension_pin_sequence
 from app.scoring.game import Game
-from app.scoring.throw import Throw
 
 
 class ThrowScore(BaseModel):
@@ -65,20 +65,5 @@ def _chronological_pins(game: Game) -> list[int]:
     pins: list[int] = []
     for frame in game.frames:
         pins.extend(frame.pin_sequence())
-    pins.extend(_extension_pins(game.extensions))
-    return pins
-
-
-def _extension_pins(throws: list[Throw]) -> list[int]:
-    pins: list[int] = []
-    previous = 0
-    for throw in throws:
-        value = throw.pins(previous)
-        pins.append(value)
-        if throw.is_strike or throw.is_spare:
-            previous = 0
-        else:
-            previous += value
-            if previous >= 15:
-                previous = 0
+    pins.extend(extension_pin_sequence(game.extensions))
     return pins

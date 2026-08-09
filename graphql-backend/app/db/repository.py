@@ -1,8 +1,9 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import Session, selectinload
 
 from app.db import models
 from app.scoring.calculator import ScoreResult
@@ -91,22 +92,29 @@ def save_game(
 
 
 def get_score(db: Session, game_id: str) -> models.Score | None:
-    game = db.get(models.Game, game_id)
-    if game is None or game.score is None:
-        return None
-    return game.score
+    statement = (
+        select(models.Score)
+        .options(
+            selectinload(models.Score.game).selectinload(models.Game.throws),
+        )
+        .where(models.Score.game_id == game_id)
+    )
+    return db.scalars(statement).first()
+
+
+def list_scores(db: Session) -> list[models.Score]:
+    statement = (
+        select(models.Score)
+        .join(models.Game)
+        .options(
+            selectinload(models.Score.game).selectinload(models.Game.throws),
+        )
+        .order_by(models.Game.created_at.desc())
+    )
+    return list(db.scalars(statement))
 
 
 def _extension_pins(throws: list[DomainThrow]) -> list[int]:
-    pins: list[int] = []
-    previous = 0
-    for throw in throws:
-        value = throw.pins(previous)
-        pins.append(value)
-        if throw.is_strike or throw.is_spare:
-            previous = 0
-        else:
-            previous += value
-            if previous >= 15:
-                previous = 0
-    return pins
+    from app.scoring.extensions import extension_pin_sequence
+
+    return extension_pin_sequence(throws)

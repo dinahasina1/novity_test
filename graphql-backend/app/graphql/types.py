@@ -6,7 +6,6 @@ import strawberry
 @strawberry.type
 class ThrowType:
     value: str
-    pins: int
 
 
 @strawberry.type
@@ -22,3 +21,4 @@ class GameScoreType:
     session_id: strawberry.ID
     total: int
     frames: list[FrameScoreType]
+    extensions: list[str]

@@ -1,7 +1,8 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 from pydantic import BaseModel, model_validator
 
+from app.scoring.extensions import InvalidExtensionsError, group_extension_throws
 from app.scoring.frame import Frame
 from app.scoring.throw import Throw
 
@@ -18,6 +19,10 @@ class Game(BaseModel):
     def validate_game(self) -> Game:
         if len(self.frames) != 5:
             raise InvalidGameError("game requires exactly 5 frames")
+        try:
+            group_extension_throws(self.extensions)
+        except InvalidExtensionsError as exc:
+            raise InvalidGameError(str(exc)) from exc
         return self
 
     @classmethod
