@@ -9,7 +9,7 @@ COPY requirements.txt .
 RUN pip install --upgrade pip \
     && pip install --prefix=/install -r requirements.txt
 
-# Runtime stage: lean image, config via compose/.env (not baked in)
+# Runtime: config comes from env_file / orchestrator (.env), not baked in
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -29,4 +29,4 @@ USER appuser
 
 EXPOSE 8003
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8003"]
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${APP_PORT:-8003}"]

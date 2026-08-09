@@ -1,9 +1,13 @@
 import type { GameScore, GameTableRow, GeneratedGame } from "./types";
 
-const DEFAULT_URL = "http://localhost:8000/graphql";
-
 function graphqlUrl(): string {
-  return process.env.NEXT_PUBLIC_GRAPHQL_URL ?? DEFAULT_URL;
+  const url = process.env.NEXT_PUBLIC_GRAPHQL_URL?.trim();
+  if (!url) {
+    throw new Error(
+      "NEXT_PUBLIC_GRAPHQL_URL manquant. Définis-le dans .env.local (dev) ou les variables Vercel (prod).",
+    );
+  }
+  return url;
 }
 
 type GraphQLResponse<T> = {
@@ -15,14 +19,24 @@ async function gql<T>(
   query: string,
   variables?: Record<string, unknown>,
 ): Promise<T> {
-  const response = await fetch(graphqlUrl(), {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query, variables }),
-  });
+  const url = graphqlUrl();
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, variables }),
+    });
+  } catch (err: unknown) {
+    const detail = err instanceof Error ? err.message : "network error";
+    throw new Error(
+      `Impossible de joindre l'API GraphQL (${url}). Vérifie NEXT_PUBLIC_GRAPHQL_URL, que l'API est joignable, et CORS_ORIGINS côté backend. (${detail})`,
+    );
+  }
 
   if (!response.ok) {
-    throw new Error(`GraphQL HTTP ${response.status}`);
+    throw new Error(`GraphQL HTTP ${response.status} (${url})`);
   }
 
   const body = (await response.json()) as GraphQLResponse<T>;

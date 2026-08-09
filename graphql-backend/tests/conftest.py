@@ -1,3 +1,9 @@
+import os
+
+# Env required by app.config / create_app (must be set before app imports)
+os.environ.setdefault("DATABASE_URL", "sqlite://")
+os.environ.setdefault("CORS_ORIGINS", "http://testserver")
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
