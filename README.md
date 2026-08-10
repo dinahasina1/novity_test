@@ -67,11 +67,18 @@ On ne regarde que le **total** (et les scores de frames).
 
 Scores de frames attendus (mixte) : `27, 13, 29, 14, 30`.
 
-### Mutation GraphQL (playground)
+### Mutations prêtes à coller (playground)
+
+Copie-colle tel quel dans le playground — un bloc = un cas du tableau.
+
+**1. Parfait → 300**
 
 ```graphql
-mutation ScoreGame($frames: [[String!]!]!, $extensions: [String!]) {
-  scoreGame(frames: $frames, extensions: $extensions) {
+mutation {
+  scoreGame(
+    frames: [["X"], ["X"], ["X"], ["X"], ["X"]]
+    extensions: ["X", "X", "X"]
+  ) {
     total
     extensions
     frames {
@@ -83,36 +90,56 @@ mutation ScoreGame($frames: [[String!]!]!, $extensions: [String!]) {
 }
 ```
 
-Variables — parfait (placeholder) :
+**2. Mixte → 113**
 
-```json
-{
-  "frames": [["X"], ["X"], ["X"], ["X"], ["X"]],
-  "extensions": ["X", "X", "X"]
+```graphql
+mutation {
+  scoreGame(
+    frames: [
+      ["6", "/"]
+      ["12", "-", "1"]
+      ["-", "-", "/"]
+      ["14", "-", "-"]
+      ["X"]
+    ]
+    extensions: ["-", "-", "/"]
+  ) {
+    total
+    extensions
+    frames {
+      index
+      score
+      throws { value }
+    }
+  }
 }
 ```
 
-Variables — mixte (placeholder) :
+**3. Bonus spare puis strike → 261**
 
-```json
-{
-  "frames": [
-    ["6", "/"],
-    ["12", "-", "1"],
-    ["-", "-", "/"],
-    ["14", "-", "-"],
-    ["X"]
-  ],
-  "extensions": ["-", "-", "/"]
+```graphql
+mutation {
+  scoreGame(
+    frames: [["X"], ["X"], ["X"], ["X"], ["X"]]
+    extensions: ["6", "/", "X"]
+  ) {
+    total
+    extensions
+    frames {
+      index
+      score
+      throws { value }
+    }
+  }
 }
 ```
 
-`curl` (prod) :
+`curl` (prod) — parfait :
 
 ```bash
 curl -s https://backend-novity.dinagency.tech/graphql \
   -H "Content-Type: application/json" \
-  -d "{\"query\":\"mutation($frames:[[String!]!]!,$extensions:[String!]){ scoreGame(frames:$frames,extensions:$extensions){ total frames{ index score } } }\",\"variables\":{\"frames\":[[\"X\"],[\"X\"],[\"X\"],[\"X\"],[\"X\"]],\"extensions\":[\"X\",\"X\",\"X\"]}}"
+  -d "{\"query\":\"mutation { scoreGame(frames: [[\\\"X\\\"],[\\\"X\\\"],[\\\"X\\\"],[\\\"X\\\"],[\\\"X\\\"]], extensions: [\\\"X\\\",\\\"X\\\",\\\"X\\\"]) { total frames { index score } } }\"}"
 ```
 
 ---
