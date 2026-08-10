@@ -50,60 +50,28 @@ L’écran principal (`Partie`) édite une partie complète puis l’envoie à l
 
 ---
 
-## Exemples GraphQL (prod)
+## Exemples
 
-Ouvre le playground : [https://backend-novity.dinagency.tech/graphql](https://backend-novity.dinagency.tech/graphql)  
-Ou envoie un `POST` avec `Content-Type: application/json`.
+[Exemples → playground GraphQL](https://backend-novity.dinagency.tech/graphql) — colle la mutation + les variables ci-dessous (prod).  
+En local : [http://localhost:8003/graphql](http://localhost:8003/graphql).
 
-### Lister les scores
+### Calculs de score (données factices)
 
-```graphql
-query Games {
-  games {
-    gameId
-    sessionId
-    total
-    extensions
-    frames {
-      index
-      score
-      throws {
-        value
-      }
-    }
-  }
-}
-```
+Pas de `gameId` / `sessionId` : on ne regarde que le **total** (et les scores de frames).
 
-### Score d’une partie par id
+| Cas | Frames | Bonus | Total |
+|---|---|---|---|
+| Parfait | `[["X"],["X"],["X"],["X"],["X"]]` | `["X","X","X"]` | **300** |
+| Mixte | `[["6","/"],["12","-","1"],["-","-","/"],["14","-","-"],["X"]]` | `["-","-","/"]` | **113** |
+| Bonus spare puis strike | `[["X"],["X"],["X"],["X"],["X"]]` | `["6","/","X"]` | **261** |
 
-```graphql
-query GameScore($gameId: ID!) {
-  gameScore(gameId: $gameId) {
-    gameId
-    total
-    extensions
-    frames {
-      index
-      score
-      throws { value }
-    }
-  }
-}
-```
+Scores de frames attendus (mixte) : `27, 13, 29, 14, 30`.
 
-Variables :
-
-```json
-{ "gameId": "UUID-DE-LA-PARTIE" }
-```
-
-### Scorer une partie (mutation)
+### Mutation GraphQL (playground)
 
 ```graphql
 mutation ScoreGame($frames: [[String!]!]!, $extensions: [String!]) {
   scoreGame(frames: $frames, extensions: $extensions) {
-    gameId
     total
     extensions
     frames {
@@ -115,7 +83,7 @@ mutation ScoreGame($frames: [[String!]!]!, $extensions: [String!]) {
 }
 ```
 
-Exemple — parfait (300) :
+Variables — parfait (placeholder) :
 
 ```json
 {
@@ -124,7 +92,7 @@ Exemple — parfait (300) :
 }
 ```
 
-Exemple — partie mixte :
+Variables — mixte (placeholder) :
 
 ```json
 {
@@ -139,12 +107,12 @@ Exemple — partie mixte :
 }
 ```
 
-`curl` vers la prod :
+`curl` (prod) — même idée, sans ids :
 
 ```bash
 curl -s https://backend-novity.dinagency.tech/graphql \
   -H "Content-Type: application/json" \
-  -d "{\"query\":\"query { games { gameId total } }\"}"
+  -d "{\"query\":\"mutation($frames:[[String!]!]!,$extensions:[String!]){ scoreGame(frames:$frames,extensions:$extensions){ total frames{ index score } } }\",\"variables\":{\"frames\":[[\"X\"],[\"X\"],[\"X\"],[\"X\"],[\"X\"]],\"extensions\":[\"X\",\"X\",\"X\"]}}"
 ```
 
 ---
