@@ -57,7 +57,7 @@ En local : [http://localhost:8003/graphql](http://localhost:8003/graphql).
 
 ### Calculs de score (données factices)
 
-Pas de `gameId` / `sessionId` : on ne regarde que le **total** (et les scores de frames).
+On ne regarde que le **total** (et les scores de frames).
 
 | Cas | Frames | Bonus | Total |
 |---|---|---|---|
@@ -107,7 +107,7 @@ Variables — mixte (placeholder) :
 }
 ```
 
-`curl` (prod) — même idée, sans ids :
+`curl` (prod) :
 
 ```bash
 curl -s https://backend-novity.dinagency.tech/graphql \
