@@ -117,14 +117,9 @@ export function GameEditor({
     <div className="space-y-4">
       <section className="rounded-xl border border-line bg-surface p-3 sm:p-4">
         <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold">
-              Partie
-            </h2>
-            <p className="text-xs text-muted">
-              Bonus = mêmes règles que les frames (reframe si plus de quilles)
-            </p>
-          </div>
+          <h2 className="font-[family-name:var(--font-display)] text-xl font-semibold">
+            Partie
+          </h2>
           {total != null ? (
             <p className="font-[family-name:var(--font-display)] text-2xl font-semibold">
               {total}
@@ -232,13 +227,6 @@ export function GameEditor({
             </div>
           ) : null}
         </div>
-
-        {needed > 0 ? (
-          <p className="mt-2 text-[11px] text-amber-800/80">
-            Mêmes règles que F1–F5 : après spare/strike on reframe (ex. 6/ puis X).
-            Pas de 6 X X. Objectif : {needed} throw{needed > 1 ? "s" : ""} bonus.
-          </p>
-        ) : null}
 
         {error ? (
           <p className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">

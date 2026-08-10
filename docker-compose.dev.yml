@@ -1,0 +1,49 @@
+
+services:
+  backend:
+    build:
+      context: ./graphql-backend
+      dockerfile: Dockerfile
+    container_name: bowling-backend-dev
+    user: "0:0"
+    ports:
+      - "8003:8003"
+    environment:
+      DATABASE_URL: sqlite:////data/bowling.db
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000,*
+      APP_PORT: "8003"
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUNBUFFERED: "1"
+    volumes:
+      - ./graphql-backend:/app
+      - bowling-dev-data:/data
+    command: ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8003"]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: bowling-frontend-dev
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_GRAPHQL_URL: http://localhost:8003/graphql
+      # Reliable file watching with Docker Desktop on Windows/macOS
+      WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
+    # Bind-mount source only — never ./frontend (would pull Windows node_modules).
+    # node_modules stays in the Linux image from Dockerfile.dev (`npm ci`).
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/next.config.ts:/app/next.config.ts:ro
+      - ./frontend/tsconfig.json:/app/tsconfig.json:ro
+      - ./frontend/postcss.config.mjs:/app/postcss.config.mjs:ro
+      - ./frontend/eslint.config.mjs:/app/eslint.config.mjs:ro
+      - ./frontend/package.json:/app/package.json:ro
+      - ./frontend/package-lock.json:/app/package-lock.json:ro
+    depends_on:
+      - backend
+
+volumes:
+  bowling-dev-data:
